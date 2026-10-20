@@ -35,13 +35,11 @@ else {
 def DISTRIBUTION_DIR = file("dist")
 def PATH_IN_ZIP = "${project.name}"
 
+// providers.exec: Project.exec was removed in Gradle 9 (Ghidra 12.1's bundled wrapper is 9.7).
 def getGitHash = {
-    def stdout = new ByteArrayOutputStream()
-    exec {
+    return providers.exec {
         commandLine 'git', 'rev-parse', '--short', 'HEAD'
-        standardOutput = stdout
-    }
-    return stdout.toString().trim()
+    }.standardOutput.asText.get().trim()
 }
 
 wrapper {
